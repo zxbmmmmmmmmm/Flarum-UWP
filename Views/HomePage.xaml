@@ -1,0 +1,196 @@
+﻿<Page
+    x:Class="FlarumUWP.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    xmlns:model="using:FlarumUWP.Core.Models"
+    xmlns:views="using:FlarumUWP.Views"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:local="using:FlarumUWP.Views"
+    mc:Ignorable="d"   
+    Loaded="HomePage_Loaded">
+    <Page.Resources>
+        <DataTemplate x:Key="ItemTemplate" x:DataType="model:Datum">
+            <Grid Height="100">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <PersonPicture ProfilePicture="{x:Bind attributes.poster_picture}" Height="45" VerticalAlignment="Top" Margin="{StaticResource SmallTopMargin}" ToolTipService.ToolTip="{x:Bind attributes.poster_display_name}"/>
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="{StaticResource SmallLeftTopMargin}"
+                    VerticalAlignment="Top">
+                    <TextBlock Text="{x:Bind attributes.title}" Style="{ThemeResource ListTitleStyle}" ToolTipService.ToolTip="{x:Bind attributes.title}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <HyperlinkButton x:Name="UserButton" Content="{x:Bind attributes.poster_display_name}" Style="{StaticResource TextBlockButtonStyle}" Click="UserButton_Click"/>
+                        <TextBlock Text="{x:Bind attributes.lastPostedAt}" Style="{StaticResource DetailBodyBaseMediumStyle}" Margin="{StaticResource XSmallLeftTopRightBottomMargin}" FontSize="14" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="{StaticResource SmallLeftMargin}">
+                    <!--<TextBlock Text="置顶(IsSticky)"/>-->
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="1" Margin="{StaticResource SmallRightMargin}">
+                    <FontIcon Glyph="&#xE8F2;" FontSize="14" Margin="0,0,0,12"/>
+                    <TextBlock Text="{x:Bind attributes.commentCount}" Margin="{StaticResource XSmallLeftMargin}" />
+                </StackPanel>
+
+
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DetailsTemplate">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <views:HomeDetailControl ListMenuItem="{Binding}" />
+            </Grid>
+        </DataTemplate>
+        
+        <!--未选中帖子时-->
+            <DataTemplate x:Key="NoSelectionContentTemplate">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <FontIcon Glyph="&#xE15F;" FontSize="40" Foreground="{StaticResource SystemAccentColor}" Margin="0,0,0,50"/>
+                <TextBlock
+                    Margin="{StaticResource LargeTopMargin}"
+                    x:Uid="Home_NoSelection"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    TextAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+         <!--标题栏-->
+        <DataTemplate x:Key="ListHeaderTemplate">
+            <Grid Height="80">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock
+                    x:Name="headerText"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource ListTitleStyle}"
+                    Text="{Binding}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    
+                    <Button x:Name="LoadMoreButton"
+                            Click="LoadMoreButton_Click"
+                            Style="{StaticResource CommandBarFlyoutEllipsisButtonStyle}"
+                            ToolTipService.ToolTip="加载更多">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE0AD;" FontSize="16" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="RefreshButton"
+                        Style="{StaticResource CommandBarFlyoutEllipsisButtonStyle}"
+                        Click="RefreshButton_Click"
+                            ToolTipService.ToolTip="刷新">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE149;" FontSize="16" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <winui:NavigationView Margin="0,-10,0,0"
+                                      Grid.Row="1"
+                                      PaneDisplayMode="Top"
+                                      IsSettingsVisible="False"
+                                      IsBackButtonVisible="Collapsed"
+                                      Height="70"
+                                      ItemInvoked="NavigationView_ItemInvoked"
+                                      Loaded="NavigationView_Loaded">
+                    <winui:NavigationView.MenuItems>
+                        <winui:NavigationViewItem Content="最新回复" IsSelected="True" SelectsOnInvoked="True"/>
+                        <winui:NavigationViewItem Content="热门主题"/>
+                        <winui:NavigationViewItem Content="新鲜出炉"/>
+                        <winui:NavigationViewItem Content="陈年旧帖"/>
+                        <winui:NavigationViewItem Content="最多被赞" IsEnabled="False"/>
+                        <winui:NavigationViewItem Content="精品创作" IsEnabled="False"/>
+
+
+                    </winui:NavigationView.MenuItems>
+
+                </winui:NavigationView>
+            </Grid>
+        </DataTemplate>
+        <!--小标题栏-->
+        <DataTemplate x:Key="MinimalListHeaderTemplate" >
+            <Grid Height="40" >
+                <ComboBox
+                    VerticalAlignment="Center"
+                    Margin="76,5,0,0"
+                    BorderThickness="0"
+                    Background="#00000000"                    
+                    SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBoxItem Content="最新回复" IsSelected="True"/>
+                    <ComboBoxItem Content="热门主题" />
+                    <ComboBoxItem Content="新鲜出炉" />
+                    <ComboBoxItem Content="陈年旧帖" />
+                    <ComboBoxItem Content="最多被赞"  IsEnabled="False"/>
+                    <ComboBoxItem Content="精品创作"  IsEnabled="False"/>
+                </ComboBox>
+               
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="LoadMoreButton"
+                            Click="LoadMoreButton_Click"
+                            Style="{StaticResource CommandBarFlyoutEllipsisButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE0AD;" FontSize="16" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="RefreshButton"
+                        Style="{StaticResource CommandBarFlyoutEllipsisButtonStyle}"
+                        Click="RefreshButton_Click"
+                        >
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE149;" FontSize="16" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea">
+        <!--<AutoSuggestBox QueryIcon="Find" TextChanged="AutoSuggestBox_TextChanged" QuerySubmitted="AutoSuggestBox_QuerySubmitted" Visibility="Visible"/>-->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <!--641 is the default CompactModeThresholdWidth in NavigationView -->
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ListDetailsViewControl.ListHeaderTemplate" Value="{StaticResource ListHeaderTemplate}"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <winui:ProgressBar x:Name="LoadingProgressBar" IsIndeterminate="True" VerticalAlignment="Top" Canvas.ZIndex="1"/>
+        <controls:ListDetailsView
+            Visibility="Visible"
+            Margin="0,0,0,0"
+            x:Name="ListDetailsViewControl"
+            x:Uid="Home"
+            BackButtonBehavior="Automatic"
+            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+            BorderBrush="Transparent"
+            DetailsTemplate="{StaticResource DetailsTemplate}"
+            ItemsSource="{x:Bind MainPageData,Mode=OneWay}"
+            ItemTemplate="{StaticResource ItemTemplate}"
+            ListHeaderTemplate="{StaticResource MinimalListHeaderTemplate}"
+            NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
+            SelectedItem="{x:Bind Selected, Mode=OneWay}"
+            SelectionChanged="ListDetailsViewControl_SelectionChanged"
+            x:FieldModifier="public">
+            
+        </controls:ListDetailsView>
+        <!---->
+    </Grid>
+</Page>

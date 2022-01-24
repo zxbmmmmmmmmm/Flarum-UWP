@@ -1,0 +1,42 @@
+﻿<ContentDialog
+    x:Class="FlarumUWP.Views.Controls.UserDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:FlarumUWP.Core.Models"
+    d:DesignHeight="345"
+    d:DesignWidth="550"
+    mc:Ignorable="d"
+    PrimaryButtonText="关闭"
+    Loaded="ContentDialog_Loaded">
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <PersonPicture Height="70" ProfilePicture="{x:Bind SelectedUser.avatarUrl}" Margin="{StaticResource SmallTopMargin}" VerticalAlignment="Center"/>
+                <StackPanel Margin="{StaticResource SmallLeftTopMargin}">
+                     <TextBlock
+                       x:Name="TitleTextBlock"
+                       Margin="{StaticResource SmallLeftMargin}"
+                       VerticalAlignment="Center"
+                       Text="{x:Bind SelectedUser.displayName}"
+                       Style="{StaticResource TitleTextBlockStyle}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="@" Style="{StaticResource DetailBodyBaseMediumStyle}" Margin="10,0,0,0"/>
+                        <TextBlock Text="{x:Bind SelectedUser.username}" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+               
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
+                <TextBlock Text="注册于 "/>
+                <TextBlock Text="{x:Bind SelectedUser.joinTime}" Margin="{StaticResource XSmallLeftMargin}"/>
+                <!--<TextBlock Text="最后登录于 " Margin="{StaticResource SmallLeftMargin}"/>
+                <TextBlock Text="{x:Bind SelectedUser.lastSeenAt}" Margin="{StaticResource XSmallLeftMargin}"/>-->
+            </StackPanel>
+            <TextBlock Text="{x:Bind SelectedUser.bio}" Margin="{StaticResource SmallTopMargin}" TextWrapping="Wrap"/>
+        </StackPanel>
+
+    </ScrollViewer>
+</ContentDialog>

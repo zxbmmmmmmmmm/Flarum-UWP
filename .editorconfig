@@ -1,0 +1,14 @@
+# top-most EditorConfig file
+root = true
+
+[*]
+end_of_line = crlf
+
+[*.{cs,xaml}]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# CS8305: 类型仅用于评估，在将来的更新中可能会被更改或删除。
+dotnet_diagnostic.CS8305.severity = silent

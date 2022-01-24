@@ -1,0 +1,44 @@
+﻿<ContentDialog
+    x:Class="FlarumUWP.Views.CloudFlareHelper"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls" 
+    x:Uid="CloudFlareHelper"
+    PrimaryButtonClick="CloudFlareHelperDialog_PrimaryButtonClick"
+    d:DesignHeight="690"
+    d:DesignWidth="1100"
+    mc:Ignorable="d"
+    x:Name="CloudFlareHelperDialog"
+    Loaded="CloudFlareHelperDialog_Loaded">
+    <ContentDialog.TitleTemplate>
+        <DataTemplate x:DataType="x:String">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="{StaticResource SmallLeftMargin}"
+                    VerticalAlignment="Center"
+                    Text="CloudFlare验证" />
+            </StackPanel>
+        </DataTemplate>
+    </ContentDialog.TitleTemplate>
+    <StackPanel>
+        <controls:InfoBar Height="60" IsOpen="True" Message="此窗口用于获取api内容，加载完成后将会自动关闭" />
+        <ScrollViewer>
+            <StackPanel>
+                <controls:ProgressBar x:Name="LoadingProgressBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" IsIndeterminate="True" />
+                <controls:WebView2 x:Name="CloudFlareHelperWebView" Height="125" Width="500" Source="https://community.wvbtech.com/api/discussions" NavigationCompleted="CloudFlareHelperWebView_NavigationCompleted" IsEnabled="False"/>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Margin="{StaticResource SmallTopMargin}">
+            <Button Height="32" x:Name="RefreshButton" Click="RefreshButton_Click" >
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xE149;" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="刷新" FontSize="12" Margin="{StaticResource XSmallLeftMargin}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <AutoSuggestBox x:Name="HTMLAutoSuggestBox" Height="32" Margin="{StaticResource XSmallLeftMargin}" Width="423" TextChanged="HTMLAutoSuggestBox_TextChanged" PlaceholderText="在此粘贴api内的内容（若无法加载）"/>
+        </StackPanel>
+       
+    </StackPanel>
+</ContentDialog>

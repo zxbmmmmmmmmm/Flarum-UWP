@@ -1,0 +1,28 @@
+﻿<ContentDialog
+    x:Class="FlarumUWP.Views.Controls.EditWebsiteDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FlarumUWP.Views.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="更改论坛"
+    PrimaryButtonText="取消">
+
+    <Grid Width="350">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="请输入新的Flarum论坛网址"/>
+        <AutoSuggestBox x:Name="EditWebsiteAutoSuggestBox"
+                        TextChanged="EditWebsiteAutoSuggestBox_TextChanged"
+                        PlaceholderText="像这样:discuss.flarum.org"
+                        Grid.Row="1"
+                        Margin="{StaticResource XSmallTopMargin}"
+                        Height="32"
+                        QueryIcon="Accept"
+                        QuerySubmitted="EditWebsiteAutoSuggestBox_QuerySubmitted"/>
+    </Grid>
+</ContentDialog>

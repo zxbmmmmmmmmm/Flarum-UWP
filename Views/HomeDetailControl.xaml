@@ -1,0 +1,184 @@
+﻿<UserControl
+    x:Class="FlarumUWP.Views.HomeDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:model="using:FlarumUWP.Core.Models"
+    xmlns:HTMLconverter="using:XAMLHtml"
+    xmlns:awas_controls="using:AppStudio.Uwp.Controls"
+    xmlns:brushes="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:media="using:Windows.UI.Xaml.Media"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converter="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <DataTemplate x:Key="ItemTemplate" x:DataType="model:Included">
+            <Border BorderBrush="{StaticResource SystemControlBackgroundListLowRevealBorderBrush}" BorderThickness="0,0,0,0.5" >
+                <Grid Margin="{StaticResource MediumBottomMargin}" >
+                    <!--头像区-->
+                    <StackPanel Margin="{StaticResource MediumTopBottomMargin}" HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <PersonPicture Height="40" ProfilePicture="{x:Bind attributes.poster_picture}" Margin="{StaticResource SmallTopMargin}" />
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="12,5,0,-3" >
+                                    <HyperlinkButton Content="{x:Bind attributes.user.displayName,Mode=OneWay}" Style="{StaticResource TextBlockButtonStyle}" Click="HyperlinkButton_Click" />
+                                    <Border Height="21" Margin="12,0,0,0" Background="{StaticResource SystemControlAccentAcrylicElementAccentMediumHighBrush}" CornerRadius="5" ToolTipService.ToolTip="{x:Bind attributes.exp}">
+                                        <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+                                            <TextBlock Text="{x:Bind attributes.user.level,Mode=OneWay}" Margin="6,0,0,0" Foreground="White"/>
+                                            <TextBlock Text="{x:Bind attributes.user.levelName,Mode=OneWay}" Margin="4,0,6,0" Foreground="White" />
+                                        </StackPanel>
+                                      
+                                    </Border>
+                                    
+
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{x:Bind attributes.number}" Margin="{StaticResource SmallLeftMargin}" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+                                    <TextBlock Text="楼" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+
+                                    <TextBlock Text="{x:Bind attributes.createdAt}"
+                                                                   Style="{StaticResource DetailBodyBaseMediumStyle}"
+                                                                   Margin="{StaticResource XSmallLeftMargin}"/>
+                                    <TextBlock Text="编辑于"
+                                                                   Margin="{StaticResource XSmallLeftMargin}"
+                                                                   Style="{StaticResource DetailBodyBaseMediumStyle}"
+                                                                   Visibility="{x:Bind attributes.edited_visibility}"/>
+                                    <TextBlock Text="{x:Bind attributes.editedAt}"
+                                                                   Style="{StaticResource DetailBodyBaseMediumStyle}"
+                                                                   Visibility="{x:Bind attributes.edited_visibility}"
+                                               Margin="4,0,0,0"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--文本区-->
+                        <StackPanel  Margin="{StaticResource SmallTopBottomMargin}" Padding="{StaticResource XSmallLeftTopRightBottomMargin}" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" Visibility="{x:Bind attributes.iconVisiblity}" >
+                                <FontIcon x:Name="InfoFontIcon" Glyph="{x:Bind attributes.icon}" FontSize="24" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{x:Bind attributes.iconInfo}" FontSize="20" Margin="{StaticResource SmallLeftMargin}" Style="{StaticResource DetailBodyStyle}"/>
+                            </StackPanel>
+                            <TextBlock x:Name="HTMLTextBlock" Text="{Binding attributes.contentHtml}" Visibility="Collapsed" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+                            <controls:MarkdownTextBlock x:Name="MarkDownTextBlock"
+                                                        Text="{x:Bind attributes.contentMD}"
+                                                        LinkClicked="MarkDownTextBlock_LinkClicked"
+                                                        SchemeList="companyportal,randomscheme"
+                                                        UriPrefix="ms-appx://"
+                                                        ImageClicked="MarkDownTextBlock_ImageClicked"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <!--底部操作区-->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Button IsEnabled="False">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE19F;" FontSize="14"/>
+                                <TextBlock Text="{x:Bind attributes.votes}" Margin="{StaticResource XSmallLeftMargin}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button IsEnabled="False" Margin="{StaticResource XSmallLeftMargin}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE97A;" FontSize="14"/>
+                                <TextBlock Text="回复" Margin="{StaticResource XSmallLeftMargin}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Margin="{StaticResource XSmallLeftMargin}" Style="{StaticResource CommandBarFlyoutEllipsisButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE10C;" FontSize="14"/>
+                            </StackPanel>
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Name="ViewSourceButton" Text="查看源码" Click="ViewSourceButton_Click">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xF56F;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Button.Flyout>
+
+                        </Button>
+                    </StackPanel>
+                    <!--<TextBlock Text="{x:Bind attributes.contentHtml}" TextWrapping="Wrap"/>-->
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer
+        Name="ForegroundElement"
+        Padding="{StaticResource DetailPageMargin}"
+        HorizontalAlignment="Stretch"
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        VerticalScrollMode="Enabled"
+        IsTabStop="True">
+            <Grid HorizontalAlignment="Stretch">
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,0,50">
+                    <!--标题栏-->
+                    <TextBlock Text="{x:Bind ListMenuItem.attributes.title,Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="{StaticResource SmallTopMargin}" >
+                        <TextBlock Text="已加载" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+                        <TextBlock x:Name="PostsNumberTextBlock" Text="{x:Bind PostsData.Count,Mode=OneWay}" Margin="3,0,0,0" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+                        <TextBlock Text="个帖子" Margin="2,0,0,0" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+                        <TextBlock Text="，共" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+                        <TextBlock x:Name="PostsCountTextBlcok" Text="{x:Bind ListMenuItem.attributes.commentCount.ToString(),Mode=OneWay}" Margin="3,0,0,0" Style="{StaticResource DetailBodyBaseMediumStyle}"/>
+                        <TextBlock Text="个帖子" Margin="2,0,0,0" Style="{StaticResource DetailBodyBaseMediumStyle}" />
+                    </StackPanel>
+                    <muxc:InfoBar
+                        x:Name="WarningInfoBar"
+                        Margin="{StaticResource SmallTopMargin}"
+                        IsOpen="False"
+                        Severity="Warning"
+                        Title="提示"
+                        Message="该贴部分楼层可能无法显示" />
+                    <!--ListView-->
+                    <ListView x:Name="PostsListView" ItemsSource="{x:Bind PostsData,Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource ItemTemplate}" HorizontalAlignment="Stretch"/>
+                    <TextBlock x:Name="CopyrightInfo" Text="Flarum UWP 2022" FontStyle="Italic" HorizontalAlignment="Center" Style="{StaticResource DetailBodyBaseMediumStyle}" Visibility="Collapsed" Margin="{StaticResource SmallTopMargin}"/>
+
+                </StackPanel>
+                <StackPanel x:Name="LoadingStackPanel" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <ProgressRing IsActive="True" Height="50" Width="50" />
+                    <TextBlock Text="滚回功率，坐和放宽" VerticalAlignment="Center" Style="{StaticResource DetailBodyBaseMediumStyle}" Margin="{StaticResource SmallTopMargin}"/>
+                </StackPanel>
+
+            </Grid>
+        </ScrollViewer>
+        <CommandBar VerticalAlignment="Bottom" HorizontalAlignment="Stretch" DefaultLabelPosition="Right" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+
+            <AppBarButton Icon="Refresh" Label="刷新" Click="RefreshButton_Click"/>
+            <AppBarToggleButton x:Name="ViewPosterButton" Label="只看楼主" Click="ViewPosterButton_Click">
+                <AppBarToggleButton.Icon>
+                    <FontIcon Glyph="&#xE2AF;"/>
+                </AppBarToggleButton.Icon>
+            </AppBarToggleButton>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="ToTopButton" Icon="Upload" Label="回到顶部" Click="ToTopButton_Click"/>
+
+                <AppBarButton x:Name="WebButton" Icon="Globe" Label="浏览器打开" Click="WebButton_Click"/>
+                <AppBarButton x:Name="APIButton" Label="打开API链接" Click="APIButton_Click">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xEC7A;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+
+            </CommandBar.SecondaryCommands>
+
+                
+
+            <!--<CommandBar.Background>
+                <brushes:AcrylicBrush BackgroundSource="Backdrop"
+                                      TintColor="{StaticResource SystemAltHighColor}"
+                                      TintOpacity="0.1"
+                                      BlurAmount="10"/>
+            </CommandBar.Background>-->
+        </CommandBar>
+
+    </Grid>
+    
+</UserControl>
